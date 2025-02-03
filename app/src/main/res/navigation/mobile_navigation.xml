@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_beneficiary_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.biometricsample.activity.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_dashboard"
+        android:name="com.example.biometricsample.activity.ui.dashboard.DashboardFragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_dashboard" >
+        <action
+            android:id="@+id/action_dashboard_to_Beneficiary_home"
+            app:destination="@id/navigation_beneficiary_home" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_notifications"
+        android:name="com.example.biometricsample.activity.ui.notifications.NotificationsFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/fragment_notifications" >
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_beneficiary_home"
+        android:name="com.example.biometricsample.transfers.ui.BeneficiaryHomeFragment"
+        android:label="@string/beneficiary_type"
+        tools:layout="@layout/fragment_beneficiary_home" >
+    <action
+        android:id="@+id/action_beneficiary_home_to_add_Beneficiary"
+        app:destination="@id/navigation_add_beneficiary" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_add_beneficiary"
+        android:name="com.example.biometricsample.transfers.ui.AddBeneficiaryFragment"
+        android:label="@string/add_beneficiary"
+        tools:layout="@layout/fragment_add_beneficiary" >
+    <argument
+        android:name="message"
+        app:argType="string" />
+    </fragment>
+</navigation>
