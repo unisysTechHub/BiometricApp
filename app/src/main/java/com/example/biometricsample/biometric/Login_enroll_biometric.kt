@@ -63,6 +63,8 @@ class Login_enroll_biometric : AppCompatActivity() {
 //                finish()
 //            }
 
+
+
         }
         viewModel.userRecordLiveData.observe(this, this::onLoginSuccess)
 //        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->

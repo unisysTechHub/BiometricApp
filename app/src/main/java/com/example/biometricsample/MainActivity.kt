@@ -31,6 +31,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,9 +47,13 @@ import com.example.biometricsample.animations.CrossfadeAnimation
 import com.example.biometricsample.animations.ElevationAnimationTest
 import com.example.biometricsample.animations.Gesture
 import com.example.biometricsample.animations.ScaleTextAnimation
+import com.example.biometricsample.transfers.ui.AddBeneficiary
+import com.example.biometricsample.transfers.ui.AddBeneficiaryScreen
+import com.example.biometricsample.transfers.ui.TransferListScreen
 import com.example.biometricsample.ui.components.UTQuanityContent
 import com.example.biometricsample.ui.components.UTQuantity
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 
 const  val CIPHERTEXT_WRAPPER = "ciphertext_wrapper"
@@ -67,6 +72,7 @@ class MainActivity : FragmentActivity() {
             Context.MODE_PRIVATE,
             CIPHERTEXT_WRAPPER
         )
+
     private  val qty = MutableStateFlow(1)
 
     @RequiresApi(Build.VERSION_CODES.R)
@@ -88,29 +94,32 @@ class MainActivity : FragmentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                   // TransferListScreen()
                     //Gesture();
-                    UTQuanityContent(count = qty, modifer = Modifier.fillMaxWidth().height(100.dp))
+//                    UTQuanityContent(count = qty, modifer = Modifier
+//                        .fillMaxWidth()
+//                        .height(100.dp))
                    // AnimateContent()
                    // CrossfadeAnimation()
                    // AnimationVisibilityTest()
                     //ScaleTextAnimation()
 
 //ElevationAnimationTest()
-//                  Box(contentAlignment = Alignment.Center) {
-//                      if (ciphertextWrapper == null) {
-//                        Button(onClick = {
-//                             enrollBiometric()
-//
-//                                                      }) {
-//                            Text("Login")
-//                        }
-//                    }
+                  Box(contentAlignment = Alignment.Center) {
+                      if (ciphertextWrapper == null) {
+                        Button(onClick = {
+                             enrollBiometric()
+
+                                                      }) {
+                            Text("Login")
+                        }
+                    }
 //                    ShowDialog{
 //                        Text(text = "Test ddfdfdfdfdf",modifier = Modifier
 //                            .fillMaxSize()
 //                            .background(Color.Green))
 //                    }
-                  //}
+                  }
                 }
             }
         }
@@ -149,40 +158,6 @@ class MainActivity : FragmentActivity() {
     // BIOMETRICS SECTION
 // BIOMETRICS SECTION
 
-    @Composable
-    fun ShowAlertDialog() {
-       
-        AlertDialog(
-            onDismissRequest = { /* Do something when the dialog is dismissed */ },
-            title = {
-                Text(text = "Attention")
-            },
-            text = {
-                Text("Biometric data is missing. Please login.")
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        val intent = Intent(Settings.ACTION_SETTINGS)
-                        startActivity(intent)
-                        // enrollBiometric()
-                        // Dismiss dialog or take any other action
-                    }
-                ) {
-                    Text("Login")
-                }
-            },
-            dismissButton = {
-                Button(
-                    onClick = {
-                        // Dismiss dialog or take any other action
-                    }
-                ) {
-                    Text("Cancel")
-                }
-            }
-        )
-    }
 
     @Composable
     fun ShowDialog(properties: DialogProperties = DialogProperties(), onDismiss : () -> Unit={}, content : @Composable () -> Unit){

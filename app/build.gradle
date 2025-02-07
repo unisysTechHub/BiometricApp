@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+
 }
 
 android {
@@ -49,6 +50,8 @@ android {
 }
 
 dependencies {
+    implementation project(':APIModule')
+    implementation project(':compose')
 
     implementation libs.androidx.core.ktx
     implementation libs.androidx.lifecycle.runtime.ktx
@@ -69,7 +72,9 @@ dependencies {
     implementation libs.androidx.legacy.support.v4
     implementation libs.androidx.fragment.ktx
     implementation libs.androidx.adaptive.android
-    def nav_version = "2.7.7"
+    implementation libs.androidx.navigation.fragment.ktx
+    implementation libs.androidx.navigation.ui.ktx
+
 
     implementation(libs.androidx.navigation.compose)
     implementation libs.androidx.constraintlayout.compose
@@ -95,10 +100,22 @@ dependencies {
 
     // optional - Multiprocess support
     implementation("androidx.work:work-multiprocess:$work_version")
-    testImplementation libs.junit
+    testImplementation  "androidx.test:annotation:1.0.1"
+    testImplementation "junit:junit:4.13.2"
+    // Optional -- Robolectric environment
+    testImplementation "androidx.test:core:1.6.1"
+
+    testImplementation "androidx.test:core-ktx:1.6.0"
+    // Optional -- Mockito framework
+    testImplementation "org.mockito:mockito-core:5.14.2"
+    // Optional -- mockito-kotlin
+    testImplementation "org.mockito.kotlin:mockito-kotlin:3.2.0"
+    // Optional -- Mockk framework
+    testImplementation "io.mockk:mockk:1.13.13"
+    testImplementation "androidx.arch.core:core-testing:2.2.0"
 
 
-        // Java language implementation
+    // Java language implementation
         implementation libs.androidx.biometric
 
         // Kotlin
@@ -110,4 +127,5 @@ dependencies {
     androidTestImplementation libs.androidx.ui.test.junit4
     debugImplementation libs.androidx.ui.tooling
     debugImplementation libs.androidx.ui.test.manifest
+    implementation "org.jetbrains.kotlin:kotlin-reflect:2.0.0"
 }

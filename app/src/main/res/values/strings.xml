@@ -13,4 +13,13 @@
     <string name="prompt_info_subtitle">Please login to get access</string>
     <string name="prompt_info_description">Sample App is using Android biometric authentication</string>
     <string name="prompt_info_use_app_password">Use app password</string>
+    <string name="arrow_back">Back Aroow</string>
+    <string name="title_activity_main_bottom_nav">MainActivityBottomNav</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="add_beneficiary">Add Beneficiary</string>
+    <string name="beneficiary_type">Beneficiary Type</string>
+    <string name="accountNumber">Account Number</string>
+    <string name ="beneficiaryName">Beneficiary Name</string>
 </resources>

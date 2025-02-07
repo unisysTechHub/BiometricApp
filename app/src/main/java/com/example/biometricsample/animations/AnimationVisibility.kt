@@ -169,9 +169,6 @@ fun paddingAnimationTest() {
         .padding(animatedPadding)
         .background(Color.Blue)
         .clickable { contentpaddingTogle = !contentpaddingTogle }    ) {
-
-
-
     }
 }
 
@@ -203,7 +200,6 @@ fun BoxWithinColumnOffsetTest(){
             .size(200.dp)
             .background(Color.Blue)
             .clickable { toggle = !toggle }) {
-
         }
         Box(modifier = Modifier
             .size(200.dp)

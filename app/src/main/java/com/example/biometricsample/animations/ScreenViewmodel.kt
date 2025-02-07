@@ -65,7 +65,7 @@ fun UTMoneyServiceTypes.cardModel() : MoneyServiceTypeModel =  when (this) {
 @Composable
 fun UTMoneyServiceTypesScreen(modifier: Modifier) {
    
-    val items = UTMoneyServiceTypes.values().map { UTGridItem(title = it.cardModel().title) }
+    val items = UTMoneyServiceTypes.values().map { UTGridItem(title = it.cardModel().title, onItemClick = {}) }
     BoxWithConstraints {
         val windowSizeClass = WindowSizeClass.compute( maxWidth.value,maxHeight.value)
         Column(modifier= modifier) {

@@ -1,4 +1,5 @@
 package com.example.biometricsample.ui.components
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -35,11 +37,12 @@ import androidx.window.core.layout.WindowHeightSizeClass
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.example.biometricsample.R
+import com.example.biometricsample.transfers.UTBeneficiaryTypes
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 data class UTGridItem(val iamgeUrl : String?="", val title : String,
-                      val price : String?="",val onItemClick : ((UTGridItem) -> Unit)?={})
+                      val price : String?="",val onItemClick : ((UTGridItem) -> Unit))
 
 //val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
 @Composable
@@ -72,8 +75,6 @@ fun UTGridItemsContent(modifier: Modifier=Modifier,maxSize:Pair<Dp, Dp>,itemSize
                UTGridHorizontalLayout(items = items, itemSize = itemSize )
         }
 
-
-
 }
 
 @Composable
@@ -85,7 +86,7 @@ fun UTGridVerticalLayout(items : List<UTGridItem>,modifier:Modifier= Modifier,it
         modifier = modifier.padding(32.dp)
     ) {
         itemsIndexed(items) { index, item ->
-            UTGridItemCard(item = item,itemSize)
+            UTGridItemCard(item = item,itemSize,item.onItemClick)
         }
     }
 }
@@ -98,18 +99,18 @@ fun UTGridHorizontalLayout(modifier:Modifier= Modifier,itemSize: Pair<Int,Int> =
         modifier = modifier.padding(top = 32.dp)
     ) {
         itemsIndexed(items) { index, item ->
-            UTGridItemCard(item = item,itemSize)
+            UTGridItemCard(item = item,itemSize,item.onItemClick)
         }
     }
 
 }
 
 @Composable
-fun UTGridItemCard(item : UTGridItem,itemSize: Pair<Int,Int> = Pair(200,200)){
+fun UTGridItemCard(item : UTGridItem,itemSize: Pair<Int,Int> = Pair(200,200), onItemClick: ((UTGridItem) -> Unit)){
     Column(modifier = Modifier.width(itemSize.first.dp).height(itemSize.second.dp)) {
         Box(modifier = Modifier
             .weight(1f)
-            .fillMaxWidth(), contentAlignment = Alignment.Center){
+            .fillMaxWidth().clickable { onItemClick(item) }.testTag(item.title), contentAlignment = Alignment.Center){
             Image(
                 modifier = Modifier.fillMaxSize()
                     .align(alignment = Alignment.Center),

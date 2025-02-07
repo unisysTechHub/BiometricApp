@@ -21,7 +21,6 @@ fun UTIntrinscHeight(){
             .fillMaxHeight()
             .width(2.dp))
         Text(text = "First one", modifier = Modifier.weight(1f))
-
     }
 }
 
