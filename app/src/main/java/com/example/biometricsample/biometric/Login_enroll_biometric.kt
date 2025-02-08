@@ -66,7 +66,8 @@ class Login_enroll_biometric : AppCompatActivity() {
 
 
         }
-        viewModel.userRecordLiveData.observe(this, this::onLoginSuccess)
+        viewModel.userRecordLiveData.
+        c(this, this::onLoginSuccess)
 //        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
 //            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
 //            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)

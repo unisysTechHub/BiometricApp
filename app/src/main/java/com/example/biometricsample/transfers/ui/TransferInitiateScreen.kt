@@ -17,11 +17,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.api.AccountModel
+import com.example.api.request.FundTransferRequestModel
+import com.example.api.resposne.Account
 import com.example.biometricsample.appcomponents.UTScaffold
 import com.example.biometricsample.appcomponents.UTSelect
 import com.example.biometricsample.transfers.UTBeneficiaryTypes
 import com.example.biometricsample.transfers.model.BeneficiaryModel
 import com.example.biometricsample.transfers.viewmodel.FundTransferViewModel
+import java.math.BigDecimal
 
 data class FundTransferModel(
     val fromAccount: AccountModel = AccountModel(),
@@ -31,6 +34,7 @@ data class FundTransferModel(
     val purpose: String = "",
     val frequency: String ="oneTime"
 )
+
 
 // tranfer view model
 
