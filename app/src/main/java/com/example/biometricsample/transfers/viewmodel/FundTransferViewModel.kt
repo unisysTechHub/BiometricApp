@@ -13,10 +13,10 @@ import java.math.BigDecimal
 
 class FundTransferViewModel : TransferListViewModel(){
     val transferUsecase = TransfersUsecase()
-//     var _uistate : MutableStateFlow<FundTransferModel> = MutableStateFlow<FundTransferModel>(
-//         FundTransferModel()
-//     )
-//    var uistate : StateFlow<FundTransferModel> = _uistate
+     var _uistate : MutableStateFlow<FundTransferModel> = MutableStateFlow<FundTransferModel>(
+         FundTransferModel()
+     )
+    var uistate : StateFlow<FundTransferModel> = _uistate
      val  selectedBeneficiary : MutableStateFlow<BeneficiaryModel> = MutableStateFlow(value = BeneficiaryModel(beneficiaryName = "Select beneficiary"))
     val transferAmmount : MutableStateFlow<String> = MutableStateFlow("0.0")
     val fundTransferModel = FundTransferModel()
