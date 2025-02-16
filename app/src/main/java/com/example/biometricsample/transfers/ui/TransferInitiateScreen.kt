@@ -113,14 +113,14 @@ fun TransferAdditionalInfo(viewmodel: FundTransferViewModel){
     UTSelect(modifier = Modifier
         .padding(top = 8.dp)
         .fillMaxWidth()
-        .testTag("From Account")
+        .testTag("Purpose")
         .height(50.dp),
         value = viewmodel.uistate.value.fromAccount.accountNumber,
         onClick = { viewmodel.showBottomSheet() })
     UTSelect(modifier = Modifier
         .padding(top = 8.dp)
         .fillMaxWidth()
-        .testTag("From Account")
+        .testTag("Frequency")
         .height(50.dp),
         value = viewmodel.uistate.value.toAccount.accountNumber,
         onClick = { viewmodel.showBeneficiariesBottomSheet() })
