@@ -94,7 +94,7 @@ fun TablayoutPractice(viewModel : TabLayoutScreenViewModel= TabLayoutScreenViewM
     Card(modifier = Modifier
         .fillMaxWidth()
         .padding(32.dp)) {
-        JetLaggedHeaderTabs(
+        TablayoutHeaderTabs(
             onTabSelected = { selectedTab = it },
             selectedTab = selectedTab,
         )
@@ -152,7 +152,7 @@ fun TablayoutConent(viewModel: TabLayoutScreenViewModel) {
 
 
 @Composable
-fun JetLaggedHeaderTabs(
+fun TablayoutHeaderTabs(
     onTabSelected: (SleepTab) -> Unit,
     selectedTab: SleepTab,
     modifier: Modifier = Modifier,
