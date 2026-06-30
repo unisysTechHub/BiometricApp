@@ -1,0 +1,42 @@
+# Android
+# Build Android app with modules stored in separate GitHub repositories.
+
+trigger:
+- main
+
+resources:
+  repositories:
+    - repository: api
+      type: github
+      endpoint: GitHubServiceConnection
+      name: myorg/API
+
+    - repository: compose
+      type: github
+      endpoint: GitHubServiceConnection
+      name: myorg/Compose
+
+pool:
+  vmImage: 'macos-latest'
+
+steps:
+- checkout: self
+
+- checkout: api
+  path: API
+
+- checkout: compose
+  path: Compose
+
+- script: |
+    echo "Workspace Structure:"
+    pwd
+    ls -R
+  displayName: 'Inspect Repository Structure'
+
+- script: |
+    chmod +x gradlew
+    java -version
+    ./gradlew --version
+    ./gradlew assembleDebug --stacktrace
+  displayName: 'Assemble Debug APK'
