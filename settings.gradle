@@ -22,6 +22,9 @@ dependencyResolutionManagement {
 rootProject.name = "BiometricSample"
 include ':app'
 include ':APIModule'
-project(':APIModule').projectDir = new File('C:\\Users\\pc\\AndroidStudioProjects\\API\\app')
 include ':compose'
-project(':compose').projectDir = new File('C:\\Users\\pc\\AndroidStudioProjects\\Compose\\app')
+project(':APIModule').projectDir =
+        new File(rootDir, 'API/app')
+
+project(':compose').projectDir =
+        new File(rootDir, 'Compose/app')
