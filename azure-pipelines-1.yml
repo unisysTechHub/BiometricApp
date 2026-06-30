@@ -8,13 +8,13 @@ resources:
   repositories:
     - repository: api
       type: github
-      endpoint: GitHubServiceConnection
-      name: myorg/API
+      endpoint: GithubServiceConnection
+      name: unisystechhub/API
 
     - repository: compose
       type: github
-      endpoint: GitHubServiceConnection
-      name: myorg/Compose
+      endpoint: GithubServiceConnection
+      name: unisystechhub/Compose
 
 pool:
   vmImage: 'macos-latest'
