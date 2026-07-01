@@ -23,9 +23,7 @@ rootProject.name = "BiometricSample"
 include ':app'
 include ':APIModule'
 include ':compose'
-include ':app'
-include ':APIModule'
-include ':compose'
+
 
 project(':APIModule').projectDir = new File('../../API')
 project(':compose').projectDir = new File('../../Compose')
