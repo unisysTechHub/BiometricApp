@@ -33,7 +33,14 @@ steps:
     pwd
     ls -R
   displayName: 'Inspect Repository Structure'
-
+- script: |
+    echo "Current directory:"
+    pwd
+    echo "Files:"
+    ls -la
+    echo "Searching for gradlew:"
+    find . -name gradlew
+  displayName: 'Debug workspace'
 - script: |
     chmod +x gradlew
     java -version
