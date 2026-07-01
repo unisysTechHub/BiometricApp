@@ -34,9 +34,11 @@ steps:
     ls -R
   displayName: 'Inspect Repository Structure'
 - script: |
-    find api -maxdepth 3 -type f | grep build.gradle || true
-    find compose -maxdepth 3 -type f | grep build.gradle || true
-  displayName: 'Locate Gradle modules'  
+    cd BiometricApp
+    ls -la APIModule
+    cat settings.gradle
+    cat APIModule/build.gradle || cat APIModule/build.gradle.kts
+  displayName: 'Inspect APIModule'
 - script: |
     echo "Current directory:"
     pwd
