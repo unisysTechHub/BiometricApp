@@ -34,11 +34,18 @@ steps:
     ls -R
   displayName: 'Inspect Repository Structure'
 - script: |
-    cd BiometricApp
-    ls -la APIModule
-    cat settings.gradle
-    cat APIModule/build.gradle || cat APIModule/build.gradle.kts
-  displayName: 'Inspect APIModule'
+    echo "=== /Users/runner/work/1 ==="
+    ls -la /Users/runner/work/1
+
+    echo "=== API ==="
+    ls -la /Users/runner/work/1/API || true
+
+    echo "=== Compose ==="
+    ls -la /Users/runner/work/1/Compose || true
+
+    echo "=== BiometricApp ==="
+    ls -la /Users/runner/work/1/s/BiometricApp || true
+  displayName: 'Inspect checkout directories'
 - script: |
     echo "Current directory:"
     pwd
