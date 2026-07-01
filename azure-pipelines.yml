@@ -54,6 +54,16 @@ steps:
     echo "Searching for gradlew:"
     find . -name gradlew
   displayName: 'Debug workspace'
+- task: Gradle@2
+  displayName: 'Assemble Debug APK'
+  inputs:
+    workingDirectory: 'BiometricApp'
+    gradleWrapperFile: 'BiometricApp/gradlew'
+    gradleOptions: '-Xmx3072m'
+    publishJUnitResults: false
+    testResultsFiles: '**/TEST-*.xml'
+    tasks: 'assembleDebug'  
+
 - script: |
     cd BiometricApp
     chmod +x gradlew
