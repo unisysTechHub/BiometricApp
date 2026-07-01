@@ -34,6 +34,10 @@ steps:
     ls -R
   displayName: 'Inspect Repository Structure'
 - script: |
+    find api -maxdepth 3 -type f | grep build.gradle || true
+    find compose -maxdepth 3 -type f | grep build.gradle || true
+  displayName: 'Locate Gradle modules'  
+- script: |
     echo "Current directory:"
     pwd
     echo "Files:"
