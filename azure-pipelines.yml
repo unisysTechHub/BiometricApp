@@ -42,7 +42,9 @@ steps:
     find . -name gradlew
   displayName: 'Debug workspace'
 - script: |
-    chmod +x BiometricApp/gradlew
+    cd BiometricApp
+    chmod +x gradlew
     java -version
-    ./BiometricApp/gradlew assembleDebug --stacktrace
+    ./gradlew --version
+    ./gradlew assembleDebug --stacktrace
   displayName: 'Assemble Debug APK'
