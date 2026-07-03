@@ -56,6 +56,7 @@ steps:
   displayName: 'Debug workspace'
 - script: |
     cd /Users/runner/work/1/s/BiometricApp
+    chmod +x gradlew
     ./gradlew :APIModule:tasks --stacktrace
   displayName: APIModule tasks  
 - task: Gradle@2
