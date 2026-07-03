@@ -54,6 +54,10 @@ steps:
     echo "Searching for gradlew:"
     find . -name gradlew
   displayName: 'Debug workspace'
+- script: |
+    cd /Users/runner/work/1/s/BiometricApp
+    ./gradlew :APIModule:tasks --stacktrace
+  displayName: APIModule tasks  
 - task: Gradle@2
   displayName: 'Assemble Debug APK'
   inputs:
