@@ -25,8 +25,8 @@ include ':APIModule'
 include ':compose'
 
 
-project(':APIModule').projectDir = new File('../../API')
-project(':compose').projectDir = new File('../../Compose')
+project(':APIModule').projectDir = new File('API')
+project(':compose').projectDir = new File('Compose')
 println "BiometricApp root = ${rootDir}"
 println "API dir = ${new File(rootDir, '../../API').canonicalPath}"
 println "Compose dir = ${new File(rootDir, '../../Compose').canonicalPath}"
