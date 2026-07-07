@@ -2,19 +2,18 @@ trigger:
   branches:
     include:
       - main
-     
 
 pr:
   branches:
     include:
       - main
-  
 
 pool:
   vmImage: 'macos-latest'
 
 variables:
   GRADLE_USER_HOME: $(Pipeline.Workspace)/.gradle
+  PROJECT_DIR: $(Build.SourcesDirectory)/BiometricApp
 
 ####################################################
 # GitHub Repositories
@@ -22,7 +21,6 @@ variables:
 
 resources:
   repositories:
-
     - repository: api
       type: github
       endpoint: GithubServiceConnection
@@ -49,37 +47,43 @@ steps:
   path: Compose
 
 ####################################################
-# Verify Repository Structure
+# Inspect Workspace
 ####################################################
 
 - script: |
-    echo "Current Directory"
+    echo "Build.SourcesDirectory = $(Build.SourcesDirectory)"
     pwd
-
-    echo "Workspace Structure"
-    ls -R
+    ls -la
+    echo "----------------------------"
+    ls -la $(PROJECT_DIR)
+    echo "----------------------------"
+    find $(Build.SourcesDirectory) -name gradlew
   displayName: 'Inspect Repository Structure'
 
 ####################################################
-# Install Java 17
+# Install Java
 ####################################################
 
 - task: JavaToolInstaller@0
   displayName: 'Install JDK 21'
   inputs:
     versionSpec: '21'
-    jdkArchitectureOption: x64
-    jdkSourceOption: PreInstalled
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: 'PreInstalled'
 
+####################################################
+# Restore Gradle Cache
+####################################################
 
 
 
 ####################################################
-# Gradle Permissions
+# Grant Execute Permission
 ####################################################
 
 - script: |
     chmod +x gradlew
+  workingDirectory: $(PROJECT_DIR)
   displayName: 'Grant Execute Permission'
 
 ####################################################
@@ -89,6 +93,7 @@ steps:
 - script: |
     java -version
     ./gradlew --version
+  workingDirectory: $(PROJECT_DIR)
   displayName: 'Verify Java & Gradle'
 
 ####################################################
@@ -97,38 +102,43 @@ steps:
 
 - script: |
     ./gradlew dependencies
+  workingDirectory: $(PROJECT_DIR)
   displayName: 'Download Dependencies'
 
 ####################################################
-# Gradle Sync Validation
+# Verify Gradle Project
 ####################################################
 
 - script: |
     ./gradlew help
+  workingDirectory: $(PROJECT_DIR)
   displayName: 'Verify Gradle Project'
 
 ####################################################
-# Clean Project
+# Clean
 ####################################################
 
 - script: |
     ./gradlew clean
+  workingDirectory: $(PROJECT_DIR)
   displayName: 'Clean Project'
 
 ####################################################
-# Build APK
+# Assemble Debug APK
 ####################################################
 
 - script: |
     ./gradlew assembleDebug --stacktrace
+  workingDirectory: $(PROJECT_DIR)
   displayName: 'Assemble Debug APK'
 
 ####################################################
-# Run Unit Tests
+# Unit Tests
 ####################################################
 
 - script: |
     ./gradlew testDebugUnitTest
+  workingDirectory: $(PROJECT_DIR)
   displayName: 'Run Unit Tests'
 
 ####################################################
@@ -137,6 +147,7 @@ steps:
 
 - script: |
     ./gradlew lintDebug
+  workingDirectory: $(PROJECT_DIR)
   displayName: 'Run Android Lint'
 
 ####################################################
@@ -145,17 +156,18 @@ steps:
 
 - script: |
     ./gradlew jacocoTestReport
+  workingDirectory: $(PROJECT_DIR)
   displayName: 'Generate JaCoCo Report'
 
 ####################################################
-# Publish Unit Test Results
+# Publish Test Results
 ####################################################
 
 - task: PublishTestResults@2
   displayName: 'Publish Unit Test Results'
   condition: succeededOrFailed()
   inputs:
-    testResultsFiles: '**/TEST-*.xml'
+    testResultsFiles: '$(PROJECT_DIR)/**/TEST-*.xml'
     mergeTestResults: true
     testRunTitle: 'Android Unit Tests'
 
@@ -167,9 +179,9 @@ steps:
   displayName: 'Publish Code Coverage'
   condition: succeededOrFailed()
   inputs:
-    codeCoverageTool: JaCoCo
-    summaryFileLocation: '**/jacocoTestReport.xml'
-    reportDirectory: '**/jacocoHtml'
+    codeCoverageTool: 'JaCoCo'
+    summaryFileLocation: '$(PROJECT_DIR)/**/jacocoTestReport.xml'
+    reportDirectory: '$(PROJECT_DIR)/**/jacocoHtml'
 
 ####################################################
 # Publish APK
@@ -179,7 +191,7 @@ steps:
   displayName: 'Publish APK'
   condition: succeededOrFailed()
   inputs:
-    PathtoPublish: 'app/build/outputs/apk/debug'
+    PathtoPublish: '$(PROJECT_DIR)/app/build/outputs/apk/debug'
     ArtifactName: 'APK'
 
 ####################################################
@@ -190,5 +202,5 @@ steps:
   displayName: 'Publish Lint Report'
   condition: succeededOrFailed()
   inputs:
-    PathtoPublish: 'app/build/reports'
+    PathtoPublish: '$(PROJECT_DIR)/app/build/reports'
     ArtifactName: 'LintReport'
