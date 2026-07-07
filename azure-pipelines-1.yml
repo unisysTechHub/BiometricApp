@@ -1,11 +1,28 @@
-# Android
-# Build Android app with modules stored in separate GitHub repositories.
-
 trigger:
-- main
+  branches:
+    include:
+      - main
+     
+
+pr:
+  branches:
+    include:
+      - main
+  
+
+pool:
+  vmImage: 'macos-latest'
+
+variables:
+  GRADLE_USER_HOME: $(Pipeline.Workspace)/.gradle
+
+####################################################
+# GitHub Repositories
+####################################################
 
 resources:
   repositories:
+
     - repository: api
       type: github
       endpoint: GithubServiceConnection
@@ -16,11 +33,14 @@ resources:
       endpoint: GithubServiceConnection
       name: unisystechhub/Compose
 
-pool:
-  vmImage: 'macos-latest'
+####################################################
+# Checkout Repositories
+####################################################
 
 steps:
+
 - checkout: self
+  clean: true
 
 - checkout: api
   path: API
@@ -28,15 +48,170 @@ steps:
 - checkout: compose
   path: Compose
 
+####################################################
+# Verify Repository Structure
+####################################################
+
 - script: |
-    echo "Workspace Structure:"
+    echo "Current Directory"
     pwd
+
+    echo "Workspace Structure"
     ls -R
   displayName: 'Inspect Repository Structure'
+- script: |
+
+    echo "Copying GitHub modules..."
+
+    cp -R $(Build.SourcesDirectory)/API \
+          $(Build.SourcesDirectory)/MainApp/API
+
+    cp -R $(Build.SourcesDirectory)/Compose \
+          $(Build.SourcesDirectory)/MainApp/Compose
+
+  displayName: Copy Module Sources
+####################################################
+# Install Java 17
+####################################################
+
+- task: JavaToolInstaller@0
+  displayName: 'Install JDK 21'
+  inputs:
+    versionSpec: '21'
+    jdkArchitectureOption: x64
+    jdkSourceOption: PreInstalled
+
+####################################################
+# Restore Gradle Cache
+####################################################
+
+- task: Cache@2
+  displayName: 'Restore Gradle Cache'
+  inputs:
+    key: |
+      gradle |
+      "$(Agent.OS)" |
+      **/*.gradle*
+      **/gradle-wrapper.properties
+    restoreKeys: |
+      gradle | "$(Agent.OS)"
+    path: $(GRADLE_USER_HOME)
+
+####################################################
+# Gradle Permissions
+####################################################
 
 - script: |
     chmod +x gradlew
+  displayName: 'Grant Execute Permission'
+
+####################################################
+# Verify Java & Gradle
+####################################################
+
+- script: |
     java -version
     ./gradlew --version
+  displayName: 'Verify Java & Gradle'
+
+####################################################
+# Download Dependencies
+####################################################
+
+- script: |
+    ./gradlew dependencies
+  displayName: 'Download Dependencies'
+
+####################################################
+# Gradle Sync Validation
+####################################################
+
+- script: |
+    ./gradlew help
+  displayName: 'Verify Gradle Project'
+
+####################################################
+# Clean Project
+####################################################
+
+- script: |
+    ./gradlew clean
+  displayName: 'Clean Project'
+
+####################################################
+# Build APK
+####################################################
+
+- script: |
     ./gradlew assembleDebug --stacktrace
   displayName: 'Assemble Debug APK'
+
+####################################################
+# Run Unit Tests
+####################################################
+
+- script: |
+    ./gradlew testDebugUnitTest
+  displayName: 'Run Unit Tests'
+
+####################################################
+# Android Lint
+####################################################
+
+- script: |
+    ./gradlew lintDebug
+  displayName: 'Run Android Lint'
+
+####################################################
+# JaCoCo Coverage
+####################################################
+
+- script: |
+    ./gradlew jacocoTestReport
+  displayName: 'Generate JaCoCo Report'
+
+####################################################
+# Publish Unit Test Results
+####################################################
+
+- task: PublishTestResults@2
+  displayName: 'Publish Unit Test Results'
+  condition: succeededOrFailed()
+  inputs:
+    testResultsFiles: '**/TEST-*.xml'
+    mergeTestResults: true
+    testRunTitle: 'Android Unit Tests'
+
+####################################################
+# Publish Code Coverage
+####################################################
+
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish Code Coverage'
+  condition: succeededOrFailed()
+  inputs:
+    codeCoverageTool: JaCoCo
+    summaryFileLocation: '**/jacocoTestReport.xml'
+    reportDirectory: '**/jacocoHtml'
+
+####################################################
+# Publish APK
+####################################################
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish APK'
+  condition: succeededOrFailed()
+  inputs:
+    PathtoPublish: 'app/build/outputs/apk/debug'
+    ArtifactName: 'APK'
+
+####################################################
+# Publish Lint Report
+####################################################
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Lint Report'
+  condition: succeededOrFailed()
+  inputs:
+    PathtoPublish: 'app/build/reports'
+    ArtifactName: 'LintReport'
