@@ -71,21 +71,8 @@ steps:
     jdkArchitectureOption: x64
     jdkSourceOption: PreInstalled
 
-####################################################
-# Restore Gradle Cache
-####################################################
 
-- task: Cache@2
-  displayName: 'Restore Gradle Cache'
-  inputs:
-    key: |
-      gradle |
-      "$(Agent.OS)" |
-      **/*.gradle*
-      **/gradle-wrapper.properties
-    restoreKeys: |
-      gradle | "$(Agent.OS)"
-    path: $(GRADLE_USER_HOME)
+
 
 ####################################################
 # Gradle Permissions
