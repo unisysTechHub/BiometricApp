@@ -59,17 +59,7 @@ steps:
     echo "Workspace Structure"
     ls -R
   displayName: 'Inspect Repository Structure'
-- script: |
 
-    echo "Copying GitHub modules..."
-
-    cp -R $(Build.SourcesDirectory)/API \
-          $(Build.SourcesDirectory)/MainApp/API
-
-    cp -R $(Build.SourcesDirectory)/Compose \
-          $(Build.SourcesDirectory)/MainApp/Compose
-
-  displayName: Copy Module Sources
 ####################################################
 # Install Java 17
 ####################################################
