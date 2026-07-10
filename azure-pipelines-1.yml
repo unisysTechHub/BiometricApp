@@ -38,13 +38,12 @@ resources:
 steps:
 
 - checkout: self
-  path: BiometricApp
 
 - checkout: api
-  path: API
+  path: s/API
 
 - checkout: compose
-  path: Compose
+  path: s/Compose
 
 ####################################################
 # Inspect Workspace
