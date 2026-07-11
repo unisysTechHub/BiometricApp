@@ -17,7 +17,7 @@ resources:
       name: unisystechhub/Compose
 
 pool:
-  vmImage: 'macos-latest'
+  name: 'android-agent'
 
 steps:
 - checkout: self
