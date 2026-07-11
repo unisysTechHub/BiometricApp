@@ -127,14 +127,25 @@ steps:
   displayName: 'Assemble Debug APK'
 
 ####################################################
-# Unit Tests
+# Unit Tests and espresso test
 ####################################################
 
 - script: |
     ./gradlew testDebugUnitTest
   workingDirectory: $(PROJECT_DIR)
   displayName: 'Run Unit Tests'
+- script: |
+    emulator -avd Pixel_API_34 -no-window -no-audio &
+    adb wait-for-device
+    adb shell settings put global window_animation_scale 0
+    adb shell settings put global transition_animation_scale 0
+    adb shell settings put global animator_duration_scale 0
+  displayName: Start Emulator
 
+- script: |
+    ./gradlew connectedDebugAndroidTest
+  workingDirectory: $(PROJECT_DIR)
+  displayName: Run Espresso Tests
 ####################################################
 # Android Lint
 ####################################################
