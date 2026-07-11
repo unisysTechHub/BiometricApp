@@ -64,16 +64,6 @@ steps:
     find $(Build.SourcesDirectory) -name gradlew
   displayName: 'Inspect Repository Structure'
 
-####################################################
-# Install Java
-####################################################
-
-- task: JavaToolInstaller@0
-  displayName: 'Install JDK 21'
-  inputs:
-    versionSpec: '21'
-    jdkArchitectureOption: 'x64'
-    jdkSourceOption: 'PreInstalled'
 
 ####################################################
 # Restore Gradle Cache
