@@ -86,6 +86,8 @@ class BeneficiaryViewModel(val beneficiaryType: UTBeneficiaryTypes = UTBeneficia
         val error = validator.validate(property, value)
         errors.value = errors.value.toMutableMap().apply { this[property] = error }
     }
+    //Reflectio normally don't use in view model - makes code less maintainble and sepearation concerns.
+    // define rules and validation across various class - seperation concerns and code modularization
     val hasEmptyField : () -> Boolean = {
         BeneficiaryModel::class.members
             .filterIsInstance<kotlin.reflect.KProperty1<BeneficiaryModel, *>>() // Get only properties
