@@ -9,7 +9,7 @@ pr:
       - main
 
 pool:
-  name: 'android-agent'
+  name: 'macos-latest'
 
 variables:
   GRADLE_USER_HOME: $(Pipeline.Workspace)/.gradle
