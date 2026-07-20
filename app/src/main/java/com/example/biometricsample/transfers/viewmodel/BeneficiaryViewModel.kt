@@ -66,7 +66,9 @@ class BeneficiaryViewModel(val beneficiaryType: UTBeneficiaryTypes = UTBeneficia
     internal fun getFieldLabels(): Map<String, Int> = beneficiaryLabels
     fun onFieldChange(property: String, value: String) {
         // Update property value
-
+   //  Interface between validation moudle where defines validation reuls and validaion logic
+    //  view model access validation types thoruhg the interace - compose module like custom TexFiled access valdation modle to validate it based on reules to be valdiated provided
+        throuhg Custom UI componet - like Custorm TextField
         val updatedBeneficiary = when (property) {
             "accountNumber" -> beneficiary.value.copy(accountNumber = value)
             "bankName" -> beneficiary.value.copy(bankName = value)
