@@ -38,14 +38,14 @@ jobs:
         with:
           repository: unisystechhub/API
           path: API
-          token: ${{ secrets.GH_PT }}
+          token: ${{ secrets.GH_PAT }}
 
       - name: Checkout Compose Repository
         uses: actions/checkout@v4
         with:
           repository: unisystechhub/Compose
           path: Compose
-          token: ${{ secrets.GH_PT }}
+          token: ${{ secrets.GH_PAT }}
 
       ####################################################
       # Show Workspace
