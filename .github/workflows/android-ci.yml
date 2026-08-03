@@ -1,0 +1,230 @@
+name: Android CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+env:
+  PROJECT_DIR: BiometricApp
+  GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  build:
+    name: Android Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+
+      ####################################################
+      # Checkout Repositories
+      ####################################################
+
+      - name: Checkout Main Repository
+        uses: actions/checkout@v4
+
+      # If repositories are PUBLIC remove token:
+      # If PRIVATE keep token: ${{ secrets.GH_PAT }}
+
+      - name: Checkout API Repository
+        uses: actions/checkout@v4
+        with:
+          repository: unisystechhub/API
+          path: API
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Checkout Compose Repository
+        uses: actions/checkout@v4
+        with:
+          repository: unisystechhub/Compose
+          path: Compose
+          token: ${{ secrets.GH_PAT }}
+
+      ####################################################
+      # Java + Gradle Cache
+      ####################################################
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: gradle
+
+      ####################################################
+      # Android SDK
+      ####################################################
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      ####################################################
+      # Workspace Info
+      ####################################################
+
+      - name: Show Workspace
+        run: |
+          echo "Workspace: $GITHUB_WORKSPACE"
+          pwd
+          find . -maxdepth 2 -type d
+
+      ####################################################
+      # Gradle Permission
+      ####################################################
+
+      - name: Make Gradle Executable
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: chmod +x gradlew
+
+      ####################################################
+      # Verify Environment
+      ####################################################
+
+      - name: Verify Java
+        run: java -version
+
+      - name: Verify Gradle
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: ./gradlew --version
+
+      ####################################################
+      # Resolve Dependencies
+      ####################################################
+
+      - name: Download Dependencies
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: ./gradlew dependencies
+
+      ####################################################
+      # Verify Project
+      ####################################################
+
+      - name: Verify Gradle Project
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: ./gradlew help
+
+      ####################################################
+      # Clean
+      ####################################################
+
+      - name: Clean Project
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: ./gradlew clean
+
+      ####################################################
+      # Build APK
+      ####################################################
+
+      - name: Assemble Debug APK
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: ./gradlew assembleDebug --stacktrace
+
+      ####################################################
+      # Unit Tests
+      ####################################################
+
+      - name: Run Unit Tests
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: ./gradlew testDebugUnitTest
+
+      ####################################################
+      # Publish JUnit Results
+      ####################################################
+
+      - name: Publish Unit Test Results
+        if: always()
+        uses: dorny/test-reporter@v2
+        with:
+          name: Android Unit Tests
+          path: BiometricApp/**/TEST-*.xml
+          reporter: java-junit
+          fail-on-error: false
+
+      ####################################################
+      # Instrumentation Tests
+      ####################################################
+
+      - name: Run Espresso Tests
+        uses: ReactiveCircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          script: |
+            cd BiometricApp
+            ./gradlew connectedDebugAndroidTest
+
+      ####################################################
+      # Android Lint
+      ####################################################
+
+      - name: Run Android Lint
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: ./gradlew lintDebug
+
+      ####################################################
+      # JaCoCo
+      ####################################################
+
+      - name: Generate JaCoCo Report
+        working-directory: ${{ env.PROJECT_DIR }}
+        run: ./gradlew jacocoTestReport
+
+      ####################################################
+      # Upload APK
+      ####################################################
+
+      - name: Upload APK
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: APK
+          path: |
+            BiometricApp/app/build/outputs/apk/debug/*.apk
+
+      ####################################################
+      # Upload Lint Report
+      ####################################################
+
+      - name: Upload Lint Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: LintReport
+          path: |
+            BiometricApp/app/build/reports
+
+      ####################################################
+      # Upload JaCoCo Reports
+      ####################################################
+
+      - name: Upload JaCoCo Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: JaCoCo
+          path: |
+            BiometricApp/**/jacocoTestReport.xml
+            BiometricApp/**/jacocoHtml
+
+      ####################################################
+      # Upload Test XMLs
+      ####################################################
+
+      - name: Upload Test Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestReports
+          path: |
+            BiometricApp/**/TEST-*.xml
