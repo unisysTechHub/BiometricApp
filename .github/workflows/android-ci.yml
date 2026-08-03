@@ -37,14 +37,14 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: unisystechhub/API
-          path: BiometricApp/API
+          path: ../API
           token: ${{ secrets.GH_PAT }}
 
       - name: Checkout Compose Repository
         uses: actions/checkout@v4
         with:
           repository: unisystechhub/Compose
-          path: BiometricApp/Compose
+          path: ../Compose
           token: ${{ secrets.GH_PAT }}
 
       ####################################################
