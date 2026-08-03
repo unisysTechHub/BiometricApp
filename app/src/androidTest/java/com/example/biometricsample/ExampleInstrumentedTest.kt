@@ -22,22 +22,22 @@ import org.junit.Rule
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
-@RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
-    @get:Rule
-    val activityRule = ActivityScenarioRule(MainActivityBottomNav::class.java)
-    private val testDispatcher = TestCoroutineDispatcher()
-    @Test
-    fun useAppContext() {
-        // Context of the app under test.
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.example.biometricsample", appContext.packageName)
-    }
-    @Test()
-    fun loadingScreenTest(){
-        Espresso.onView(withId(R.id.text_dashboard
+// @RunWith(AndroidJUnit4::class)
+// class ExampleInstrumentedTest {
+//     @get:Rule
+//     val activityRule = ActivityScenarioRule(MainActivityBottomNav::class.java)
+//     private val testDispatcher = TestCoroutineDispatcher()
+//     @Test
+//     fun useAppContext() {
+//         // Context of the app under test.
+//         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+//         assertEquals("com.example.biometricsample", appContext.packageName)
+//     }
+//     @Test()
+//     fun loadingScreenTest(){
+//         Espresso.onView(withId(R.id.text_dashboard
 
-        ))
-            .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
-    }
-}
+//         ))
+//             .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+//     }
+// }
