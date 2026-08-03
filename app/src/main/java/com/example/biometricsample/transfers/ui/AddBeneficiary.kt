@@ -102,6 +102,7 @@ fun ReviewBeneficiary(viewModel: BeneficiaryViewModel = BeneficiaryViewModel(), 
 //        Log.d("@Ramesh REview", it.name)
 //        it
 //    }
+    val beneficiary by viewModel.beneficiary.collectAsState()
     val showProgress = viewModel.isLoading.observeAsState()
     if (showProgress.value == true) {
         UTProgress()
@@ -121,7 +122,7 @@ fun ReviewBeneficiary(viewModel: BeneficiaryViewModel = BeneficiaryViewModel(), 
             when (viewModel.beneficiaryType) {
                 UTBeneficiaryTypes.DomesticWire -> {
                     Column {
-                        if (viewModel.beneficiary.value.accountNumber.isNotEmpty()) {
+                        if (beneficiary.accountNumber.isNotEmpty()) {
                             Row {
                                 Text(
                                     text = stringResource(R.string.accountNumber),
@@ -130,7 +131,7 @@ fun ReviewBeneficiary(viewModel: BeneficiaryViewModel = BeneficiaryViewModel(), 
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
                                 Text(
-                                    text = viewModel.beneficiary.value.accountNumber,
+                                    text = beneficiary.accountNumber,
                                     modifier = Modifier.weight(1f),
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
@@ -145,7 +146,7 @@ fun ReviewBeneficiary(viewModel: BeneficiaryViewModel = BeneficiaryViewModel(), 
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
                                 Text(
-                                    text = viewModel.beneficiary.value.transferType,
+                                    text = beneficiary.transferType,
                                     modifier = Modifier.weight(1f),
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
@@ -162,13 +163,13 @@ fun ReviewBeneficiary(viewModel: BeneficiaryViewModel = BeneficiaryViewModel(), 
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
                                 Text(
-                                    text = viewModel.beneficiary.value.beneficiaryName,
+                                    text = beneficiary.beneficiaryName,
                                     modifier = Modifier.weight(1f),
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
                             }
                         }
-                        if (viewModel.beneficiary.value.bankName.isNotEmpty()) {
+                        if (beneficiary.bankName.isNotEmpty()) {
                             Row {
                                 Text(
                                     text = "Bank Name",
@@ -177,7 +178,7 @@ fun ReviewBeneficiary(viewModel: BeneficiaryViewModel = BeneficiaryViewModel(), 
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
                                 Text(
-                                    text = viewModel.beneficiary.value.bankName,
+                                    text = beneficiary.bankName,
                                     modifier = Modifier.weight(1f),
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
@@ -192,7 +193,7 @@ fun ReviewBeneficiary(viewModel: BeneficiaryViewModel = BeneficiaryViewModel(), 
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
                                 Text(
-                                    text = viewModel.beneficiary.value.accountType,
+                                    text = beneficiary.accountType,
                                     modifier = Modifier.weight(1f),
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
@@ -208,7 +209,7 @@ fun ReviewBeneficiary(viewModel: BeneficiaryViewModel = BeneficiaryViewModel(), 
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
                                 Text(
-                                    text = viewModel.beneficiary.value.email,
+                                    text = beneficiary.email,
                                     modifier = Modifier.weight(1f),
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
@@ -223,7 +224,7 @@ fun ReviewBeneficiary(viewModel: BeneficiaryViewModel = BeneficiaryViewModel(), 
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
                                 Text(
-                                    text = viewModel.beneficiary.value.currency,
+                                    text = beneficiary.currency,
                                     modifier = Modifier.weight(1f),
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
@@ -238,7 +239,7 @@ fun ReviewBeneficiary(viewModel: BeneficiaryViewModel = BeneficiaryViewModel(), 
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
                                 Text(
-                                    text = viewModel.beneficiary.value.country,
+                                    text = beneficiary.country,
                                     modifier = Modifier.weight(1f),
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
@@ -253,7 +254,7 @@ fun ReviewBeneficiary(viewModel: BeneficiaryViewModel = BeneficiaryViewModel(), 
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
                                 Text(
-                                    text = viewModel.beneficiary.value.swiftBicCode,
+                                    text = beneficiary.swiftBicCode,
                                     modifier = Modifier.weight(1f),
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
@@ -268,7 +269,7 @@ fun ReviewBeneficiary(viewModel: BeneficiaryViewModel = BeneficiaryViewModel(), 
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
                                 Text(
-                                    text = viewModel.beneficiary.value.phoneNumber,
+                                    text = beneficiary.phoneNumber,
                                     modifier = Modifier.weight(1f),
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
@@ -283,7 +284,7 @@ fun ReviewBeneficiary(viewModel: BeneficiaryViewModel = BeneficiaryViewModel(), 
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
                                 Text(
-                                    text = viewModel.beneficiary.value.iban,
+                                    text = beneficiary.iban,
                                     modifier = Modifier.weight(1f),
                                     fontSize = MaterialTheme.typography.headlineSmall.fontSize
                                 )
