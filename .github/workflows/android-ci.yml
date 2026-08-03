@@ -1,6 +1,8 @@
 name: Android CI
 
 on:
+  workflow_dispatch:
+
   push:
     branches:
       - main
@@ -10,7 +12,6 @@ on:
       - main
 
 env:
-  PROJECT_DIR: BiometricApp
   GRADLE_USER_HOME: ${{ github.workspace }}/.gradle
 
 permissions:
@@ -28,28 +29,42 @@ jobs:
       # Checkout Repositories
       ####################################################
 
-      - name: Checkout Main Repository
+      - name: Checkout BiometricApp
         uses: actions/checkout@v4
 
-      # If repositories are PUBLIC remove token:
-      # If PRIVATE keep token: ${{ secrets.GH_PAT }}
-
+      # Remove token if repositories are public
       - name: Checkout API Repository
         uses: actions/checkout@v4
         with:
           repository: unisystechhub/API
           path: API
-          token: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.GH_PT }}
 
       - name: Checkout Compose Repository
         uses: actions/checkout@v4
         with:
           repository: unisystechhub/Compose
           path: Compose
-          token: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.GH_PT }}
 
       ####################################################
-      # Java + Gradle Cache
+      # Show Workspace
+      ####################################################
+
+      - name: Show Workspace Layout
+        run: |
+          echo "Workspace = $GITHUB_WORKSPACE"
+          pwd
+          ls -la
+          echo "-----------------------"
+          find . -maxdepth 2 -type d
+          echo "-----------------------"
+          find . -name gradlew
+          echo "-----------------------"
+          find . -name settings.gradle -o -name settings.gradle.kts
+
+      ####################################################
+      # Setup Java
       ####################################################
 
       - name: Setup JDK 17
@@ -60,28 +75,17 @@ jobs:
           cache: gradle
 
       ####################################################
-      # Android SDK
+      # Setup Android SDK
       ####################################################
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
       ####################################################
-      # Workspace Info
-      ####################################################
-
-      - name: Show Workspace
-        run: |
-          echo "Workspace: $GITHUB_WORKSPACE"
-          pwd
-          find . -maxdepth 2 -type d
-
-      ####################################################
       # Gradle Permission
       ####################################################
 
       - name: Make Gradle Executable
-        working-directory: ${{ env.PROJECT_DIR }}
         run: chmod +x gradlew
 
       ####################################################
@@ -92,15 +96,13 @@ jobs:
         run: java -version
 
       - name: Verify Gradle
-        working-directory: ${{ env.PROJECT_DIR }}
         run: ./gradlew --version
 
       ####################################################
-      # Resolve Dependencies
+      # Download Dependencies
       ####################################################
 
       - name: Download Dependencies
-        working-directory: ${{ env.PROJECT_DIR }}
         run: ./gradlew dependencies
 
       ####################################################
@@ -108,7 +110,6 @@ jobs:
       ####################################################
 
       - name: Verify Gradle Project
-        working-directory: ${{ env.PROJECT_DIR }}
         run: ./gradlew help
 
       ####################################################
@@ -116,15 +117,13 @@ jobs:
       ####################################################
 
       - name: Clean Project
-        working-directory: ${{ env.PROJECT_DIR }}
         run: ./gradlew clean
 
       ####################################################
-      # Build APK
+      # Assemble APK
       ####################################################
 
       - name: Assemble Debug APK
-        working-directory: ${{ env.PROJECT_DIR }}
         run: ./gradlew assembleDebug --stacktrace
 
       ####################################################
@@ -132,11 +131,10 @@ jobs:
       ####################################################
 
       - name: Run Unit Tests
-        working-directory: ${{ env.PROJECT_DIR }}
         run: ./gradlew testDebugUnitTest
 
       ####################################################
-      # Publish JUnit Results
+      # Publish Unit Test Results
       ####################################################
 
       - name: Publish Unit Test Results
@@ -144,12 +142,12 @@ jobs:
         uses: dorny/test-reporter@v2
         with:
           name: Android Unit Tests
-          path: BiometricApp/**/TEST-*.xml
+          path: '**/TEST-*.xml'
           reporter: java-junit
           fail-on-error: false
 
       ####################################################
-      # Instrumentation Tests
+      # Espresso Tests
       ####################################################
 
       - name: Run Espresso Tests
@@ -161,7 +159,6 @@ jobs:
           profile: pixel
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           script: |
-            cd BiometricApp
             ./gradlew connectedDebugAndroidTest
 
       ####################################################
@@ -169,7 +166,6 @@ jobs:
       ####################################################
 
       - name: Run Android Lint
-        working-directory: ${{ env.PROJECT_DIR }}
         run: ./gradlew lintDebug
 
       ####################################################
@@ -177,7 +173,6 @@ jobs:
       ####################################################
 
       - name: Generate JaCoCo Report
-        working-directory: ${{ env.PROJECT_DIR }}
         run: ./gradlew jacocoTestReport
 
       ####################################################
@@ -189,8 +184,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: APK
-          path: |
-            BiometricApp/app/build/outputs/apk/debug/*.apk
+          path: app/build/outputs/apk/debug/*.apk
 
       ####################################################
       # Upload Lint Report
@@ -201,8 +195,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: LintReport
-          path: |
-            BiometricApp/app/build/reports
+          path: app/build/reports
 
       ####################################################
       # Upload JaCoCo Reports
@@ -214,8 +207,8 @@ jobs:
         with:
           name: JaCoCo
           path: |
-            BiometricApp/**/jacocoTestReport.xml
-            BiometricApp/**/jacocoHtml
+            **/jacocoTestReport.xml
+            **/jacocoHtml
 
       ####################################################
       # Upload Test XMLs
@@ -226,5 +219,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: TestReports
-          path: |
-            BiometricApp/**/TEST-*.xml
+          path: '**/TEST-*.xml'
