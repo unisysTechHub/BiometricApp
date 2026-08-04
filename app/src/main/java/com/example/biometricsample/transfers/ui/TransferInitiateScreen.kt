@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -12,6 +13,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -79,6 +81,7 @@ fun FundTransfer(viewmodel: FundTransferViewModel){
 
 @Composable
 fun TransferSelectAccount(viewmodel: FundTransferViewModel){
+     val uistate by viewmodel.uistate.collectAsStateWithLifecycle()
         Column(modifier = Modifier
             .padding(8.dp)
         ) {
@@ -88,14 +91,14 @@ fun TransferSelectAccount(viewmodel: FundTransferViewModel){
                 .fillMaxWidth()
                 .testTag("From Account")
                 .height(50.dp),
-                value = viewmodel.uistate.value.fromAccount.accountNumber,
+                value = uistate.fromAccount.accountNumber,
                 onClick = { viewmodel.showBottomSheet() })
             UTSelect(modifier = Modifier
                 .padding(top = 8.dp)
                 .fillMaxWidth()
                 .testTag("From Account")
                 .height(50.dp),
-                value = viewmodel.uistate.value.toAccount.accountNumber,
+                value = uistate.toAccount.accountNumber,
                 onClick = { viewmodel.showBeneficiariesBottomSheet() })
         }
     
@@ -110,20 +113,7 @@ fun TransferAmount(viewmodel: FundTransferViewModel){
 }
 @Composable
 fun TransferAdditionalInfo(viewmodel: FundTransferViewModel){
-    UTSelect(modifier = Modifier
-        .padding(top = 8.dp)
-        .fillMaxWidth()
-        .testTag("Purpose")
-        .height(50.dp),
-        value = viewmodel.uistate.value.fromAccount.accountNumber,
-        onClick = { viewmodel.showBottomSheet() })
-    UTSelect(modifier = Modifier
-        .padding(top = 8.dp)
-        .fillMaxWidth()
-        .testTag("Frequency")
-        .height(50.dp),
-        value = viewmodel.uistate.value.toAccount.accountNumber,
-        onClick = { viewmodel.showBeneficiariesBottomSheet() })
+    Text(" Transfer Additional Info")
 }
 
 @Preview
