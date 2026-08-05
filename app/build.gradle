@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id 'jacoco'
 
 }
 
@@ -23,6 +24,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            enableAndroidTestCoverage = true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -47,6 +51,13 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    jacoco {
+        version = libs.versions.jacoco.get()
+    }
+}
+
+jacoco {
+    toolVersion = libs.versions.jacoco.get()
 }
 
 dependencies {

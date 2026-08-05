@@ -177,7 +177,8 @@ jobs:
       ####################################################
 
       - name: Generate JaCoCo Report
-        run: ./gradlew jacocoTestReport
+        run: ./gradlew :app:createDebugAndroidTestCoverageReport
+
 
       ####################################################
       # Upload APK
