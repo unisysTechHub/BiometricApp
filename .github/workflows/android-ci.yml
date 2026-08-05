@@ -154,7 +154,7 @@ jobs:
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
-      - name: Run Espresso Tests
+      - name: Run Espresso Tests JaCoCo Coverage
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
           api-level: 34
@@ -164,6 +164,7 @@ jobs:
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           script: |
             ./gradlew connectedDebugAndroidTest
+            ./gradlew :app:createDebugAndroidTestCoverageReport
 
       ####################################################
       # Android Lint
@@ -175,10 +176,6 @@ jobs:
       ####################################################
       # JaCoCo
       ####################################################
-
-      - name: Generate JaCoCo Report
-        run: ./gradlew :app:createDebugAndroidTestCoverageReport
-
 
       ####################################################
       # Upload APK
