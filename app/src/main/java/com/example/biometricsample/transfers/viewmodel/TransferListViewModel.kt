@@ -27,7 +27,7 @@ open class TransferListViewModel : UTCommonViewModel(){
     val transfersUsecase = TransfersUsecase()
     var favaourites : MutableStateFlow<ListModel> = MutableStateFlow(ListModel(items=listOf(ListItem())))
     var beneficiaries : MutableStateFlow<ListModel> = MutableStateFlow(ListModel(items=listOf(ListItem())))
-    val selectedItem : MutableLiveData<ListItem> = MutableLiveData(ListItem())
+    val selectedItem : MutableLiveData<ListItem?> = MutableLiveData()
     suspend fun getAccounts() {
 
         val job = viewModelScope.async { transfersUsecase.getAccounts()

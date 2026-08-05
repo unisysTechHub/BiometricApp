@@ -83,7 +83,8 @@ fun FundTransfer(viewmodel: FundTransferViewModel){
 @Composable
 fun TransferSelectAccount(viewmodel: FundTransferViewModel){
      val uistate by viewmodel.uistate.collectAsStateWithLifecycle()
-        Column(modifier = Modifier
+
+    Column(modifier = Modifier
             .padding(8.dp)
         ) {
 
