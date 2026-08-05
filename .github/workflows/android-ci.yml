@@ -203,14 +203,13 @@ jobs:
       # Upload JaCoCo Reports
       ####################################################
 
-      - name: Upload JaCoCo Report
+      - name: Upload Android Coverage Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: JaCoCo
+          name: Android-Coverage
           path: |
-            **/jacocoTestReport.xml
-            **/jacocoHtml
+            **/reports/coverage/androidTest/debug/connected/**
 
       ####################################################
       # Upload Test XMLs
