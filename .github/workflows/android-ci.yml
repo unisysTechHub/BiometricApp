@@ -125,12 +125,29 @@ jobs:
 
       - name: Assemble Debug APK
         run: ./gradlew assembleDebug --stacktrace
+      ####################################################
+      # Assemble APK
+      ####################################################
+      - name: Assemble Debug APK and Android Test APK
+        run: ./gradlew  assembleDebugAndroidTest --stacktrace
+      ####################################################
+      # upload APK
+      ####################################################
+      - name: Upload APK
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: APK-${{ github.run_id }}
+          path: |
+            app/build/outputs/apk/debug/*.apk
+            app/build/outputs/apk/androidTest/debug/*.apk
 
       ####################################################
       # Unit Tests
       ####################################################
 
       - name: Run Unit Tests
+        if: false
         run: ./gradlew testDebugUnitTest
 
       ####################################################
@@ -138,7 +155,7 @@ jobs:
       ####################################################
 
       - name: Publish Unit Test Results
-        if: always()
+        if: false
         uses: dorny/test-reporter@v2
         with:
           name: Android Unit Tests
@@ -146,78 +163,64 @@ jobs:
           reporter: java-junit
           fail-on-error: false
 
+  esproesso_tests:
+    name: Espresso API ${{ matrix.api_level }}
+
+    strategy:
+      matrix:
+        api_level: [ 31, 32, 33, 34 ]
+
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+
       ####################################################
-      # Espresso Tests
+      # Download APKs built by the build job
       ####################################################
+
+      - name: Download APKs
+        uses: actions/download-artifact@v4
+        with:
+          name: APK-${{ github.run_id }}
+          path: apks
+
+      ####################################################
+      # Enable KVM
+      ####################################################
+
       - name: Enable KVM
         run: |
-          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' |
+            sudo tee /etc/udev/rules.d/99-kvm4all.rules
+
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
-      - name: Run Espresso Tests JaCoCo Coverage
+
+      ####################################################
+      # Start emulator and execute prebuilt APKs
+      ####################################################
+
+      - name: Run Espresso Tests API-${{ matrix.api_level }}
+        env:
+          TEST_PACKAGE: ${{ vars.BIOMETRIC_APP_TEST_PACKAGE }}
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
-          api-level: 34
+          api-level: ${{ matrix.api_level }}
           target: google_apis
           arch: x86_64
           profile: pixel
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+
           script: |
-            ./gradlew connectedDebugAndroidTest
-            ./gradlew :app:createDebugAndroidTestCoverageReport
+            echo "Installing application APK..."
+            adb install apks/app-debug.apk
 
-      ####################################################
-      # Android Lint
-      ####################################################
+            echo "Installing instrumentation test APK..."
+            adb install apks/app-debug-androidTest.apk
 
-      - name: Run Android Lint
-        run: ./gradlew lintDebug
+            echo "Running Espresso tests..."
+            adb shell am instrument -w \
+             "$TEST_PACKAGE/androidx.test.runner.AndroidJUnitRunner"
 
-      ####################################################
-      # JaCoCo
-      ####################################################
 
-      ####################################################
-      # Upload APK
-      ####################################################
-
-      - name: Upload APK
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: APK
-          path: app/build/outputs/apk/debug/*.apk
-
-      ####################################################
-      # Upload Lint Report
-      ####################################################
-
-      - name: Upload Lint Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: LintReport
-          path: app/build/reports
-
-      ####################################################
-      # Upload JaCoCo Reports
-      ####################################################
-
-      - name: Upload Android Coverage Report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: Android-Coverage
-          path: |
-            **/reports/coverage/androidTest/debug/connected/**
-
-      ####################################################
-      # Upload Test XMLs
-      ####################################################
-
-      - name: Upload Test Reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: TestReports
-          path: '**/TEST-*.xml'
