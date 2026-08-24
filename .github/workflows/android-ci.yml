@@ -229,7 +229,6 @@ jobs:
             adb install ./apks/androidTest/debug/app-debug-androidTest.apk
 
             echo "Running Espresso tests..."
-            adb shell am instrument -w \
-             "$TEST_PACKAGE/androidx.test.runner.AndroidJUnitRunner"
+            adb shell am instrument -w  "$TEST_PACKAGE/androidx.test.runner.AndroidJUnitRunner"
 
 
