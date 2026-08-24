@@ -128,7 +128,7 @@ jobs:
       ####################################################
       # Assemble APK
       ####################################################
-      - name: Assemble Debug APK and Android Test APK
+      - name:  Android Test APK
         run: ./gradlew  assembleDebugAndroidTest --stacktrace
       ####################################################
       # upload APK
@@ -183,7 +183,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: APK-${{ github.run_id }}
-          path: apks
+
 
       ####################################################
       # Enable KVM
