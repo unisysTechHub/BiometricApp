@@ -226,7 +226,7 @@ jobs:
             adb install ./apks/debug/app-debug.apk
 
             echo "Installing instrumentation test APK..."
-            adb install ./apks/androidTest/app-debug-androidTest.apk
+            adb install ./apks/androidTest/debug/app-debug-androidTest.apk
 
             echo "Running Espresso tests..."
             adb shell am instrument -w \
