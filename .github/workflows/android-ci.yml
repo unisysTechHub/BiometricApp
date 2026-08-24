@@ -178,7 +178,9 @@ jobs:
       ####################################################
       # Download APKs built by the build job
       ####################################################
-
+      - name: show current directoyr
+        run: |
+          pwd
       - name: Download APKs
         uses: actions/download-artifact@v4
         with:
