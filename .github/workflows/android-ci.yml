@@ -219,6 +219,8 @@ jobs:
           script: |
             echo "show download apks"
              ls -la ./apks
+             ls -la ./apks/debug
+            ls -la ./apks/androidTest
             
             echo "Installing application APK..."
             adb install ./apks/debug/app-debug.apk
