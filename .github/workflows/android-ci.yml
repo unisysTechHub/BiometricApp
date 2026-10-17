@@ -78,22 +78,14 @@ jobs:
       # Setup Android SDK
       ####################################################
 
+     
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-      - name: Accept Android SDK Licenses
-        run: yes | sdkmanager --licenses
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools emulator platforms;android-34 build-tools;34.0.0'
 
-      - name: Install Android SDK Packages
-        run: |
-          sdkmanager "platform-tools"
-          sdkmanager "platforms;android-34"
-          sdkmanager "build-tools;34.0.0"
-
-      - name: Verify Android SDK
-        run: |
-          echo "ANDROID_HOME=$ANDROID_HOME"
-          which sdkmanager
-          sdkmanager --list_installed  
+      
+     
 
       ####################################################
       # Gradle Permission
